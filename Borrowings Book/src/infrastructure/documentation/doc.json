@@ -1,0 +1,295 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Peminjaman Buku API",
+    "description": "API untuk pengelolaan member, pengelolaan buku, peminjaman buku dan pengembalian buku",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Local server"
+    }
+  ],
+  "paths": {
+    "/members": {
+      "get": {
+        "summary": "Get all members",
+        "description": "Retrieve a list of all members.",
+        "responses": {
+          "200": {
+            "description": "A list of members.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "succes": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "code": {
+                            "type": "string",
+                            "example": "M001"
+                          },
+                          "name": {
+                            "type": "string",
+                            "example": "Angga"
+                          },
+                          "borrowed Book": {
+                            "type": "integer",
+                            "example": 1
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/books": {
+      "get": {
+        "summary": "Get all books",
+        "description": "Retrieve a list of all books.",
+        "responses": {
+          "200": {
+            "description": "A list of books.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "book_id": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "title": {
+                        "type": "string",
+                        "example": "The Great Gatsby"
+                      },
+                      "author": {
+                        "type": "string",
+                        "example": "F. Scott Fitzgerald"
+                      },
+                      "available": {
+                        "type": "boolean",
+                        "example": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/borrow": {
+      "post": {
+        "summary": "Borrow a book",
+        "description": "Borrow a book from the library.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "member_id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "book_id": {
+                    "type": "integer",
+                    "example": 2
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Book borrowed successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Borrow Success"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "examples": {
+                        "Book not found": "Book not found",
+                        "Cannot borrow the book, Member already borrowed 2 books": "Cannot borrow the book, Member already borrowed 2 books",
+                        "Cannot borrow the book, Member has penalties": "Cannot borrow the book, Member has penalties",
+                        "Cannot borrow the book, Book out of stock": "Cannot borrow the book, Book out of stock"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/return": {
+      "patch": {
+        "summary": "Return a book",
+        "description": "Return a borrowed book to the library.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "member_id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "book_id": {
+                    "type": "integer",
+                    "example": 2
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Book returned successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "examples": {
+                        "Book returned late, penalties applied": "Book returned late, penalties applied",
+                        "Book returned": "Book returned"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid request data."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 500
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
